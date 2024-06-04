@@ -5,4 +5,8 @@ contract HelloTesting{
     function print() public pure returns(string memory){
         return "Hello Testing";
     }
+
+    function printNum() public pure returns(uint){
+        return 1;
+    }
 }
