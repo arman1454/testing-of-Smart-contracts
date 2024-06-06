@@ -8,8 +8,8 @@ contract Bidding{
         string name;
         string description;
         uint min;
-        uint bestOfferId;
-        uint [] offerIds;
+        uint bestBidId; // id
+        uint [] bidIds; //[id1,id2,id3,...]
     }
 
     struct Bid{
@@ -20,8 +20,13 @@ contract Bidding{
     }
 
     mapping(uint=>Auction) private auctions;
+    mapping(uint=>Bid) private bids;
+
     mapping(address=>uint[]) private auctionList;
+    mapping(uint=>uint[]) private bidList;
+
     uint private newAuctionId = 1;
+    uint private newBidId = 1;
 
     function createAuction(string calldata _name, string calldata _description, uint _min) external{
         require(_min>0,"minimum must be greater than 0");
@@ -31,6 +36,25 @@ contract Bidding{
         auctionList[msg.sender].push(newAuctionId);
         newAuctionId++;
     }
+
+    function bid(uint _auctionId) external payable bidExists(_auctionId){
+        Auction storage auction = auctions[_auctionId];
+        Bid storage bestOffer = bids[auction.bestOfferId];
+
+        require(msg.value>=auction.min && msg.value>bestOffer.price,"bid must be greater than the minimum and the best offer")
+        auction.bestOfferId = newOfferId;
+        auction.offerIds.push(newOfferId);
+
+        bids[newOfferId] = Bid(newOfferId,_auctionId,msg.sender,msg.value);
+
+    }   
+
+    modifier bidExists(uint _auctionId){
+        require(_auctionId>0 && _auctionId<newAuctionId,"Auction does not exist");
+        _;
+    }
+
+
 
 
 }
