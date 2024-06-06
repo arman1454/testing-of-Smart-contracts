@@ -38,7 +38,7 @@ contract Bidding{
         newAuctionId++;
     }
 
-    function bid(uint _auctionId) external payable bidExists(_auctionId){
+    function bid(uint _auctionId) external payable auctionExists(_auctionId){
         Auction storage auction = auctions[_auctionId];
         Bid storage bestBid = bids[auction.bestBidId];
 
@@ -52,9 +52,21 @@ contract Bidding{
 
         newBidId++;
 
+    }
+
+    function transaction(uint _auctionId) external auctionExists(_auctionId){
+        Auction storage auction = auctions[_auctionId];
+
+        Bid storage bestBid = bids[auction.bestBidId];
+
+        for(uint i=0; i<auction.bidIds.length; i++){
+            if(auction.bidIds[i]!= auction.bestBidId){
+                Bid storage bid = bids[bidId]
+            }
+        }
     }   
 
-    modifier bidExists(uint _auctionId){
+    modifier auctionExists(uint _auctionId){
         require(_auctionId>0 && _auctionId<newAuctionId,"Auction does not exist");
         _;
     }
