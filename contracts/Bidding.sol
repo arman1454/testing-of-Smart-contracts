@@ -26,20 +26,21 @@ contract Bidding{
     mapping(uint=>uint[]) private bidList;
 
     uint private newAuctionId = 1;
+
     uint private newBidId = 1;
 
     function createAuction(string calldata _name, string calldata _description, uint _min) external{
         require(_min>0,"minimum must be greater than 0");
-        uint[] memory offerIds = new uint[](0);
+        uint[] memory bidIds = new uint[](0);
 
-        auctions[newAuctionId] = Auction(newAuctionId,payable(msg.sender),_name,_description,_min,0,offerIds);
-        auctionList[msg.sender].push(newAuctionId);
+        auctions[newAuctionId] = Auction(newAuctionId,msg.sender,_name,_description,_min,0,offerIds);
+        auctionList[msg.sender].push(newAuctionId); 
         newAuctionId++;
     }
 
     function bid(uint _auctionId) external payable bidExists(_auctionId){
         Auction storage auction = auctions[_auctionId];
-        Bid storage bestOffer = bids[auction.bestOfferId];
+        Bid storage bestBid = bids[auction.bestBidId];
 
         require(msg.value>=auction.min && msg.value>bestOffer.price,"bid must be greater than the minimum and the best offer")
         auction.bestOfferId = newOfferId;
