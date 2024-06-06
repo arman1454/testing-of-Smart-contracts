@@ -42,11 +42,15 @@ contract Bidding{
         Auction storage auction = auctions[_auctionId];
         Bid storage bestBid = bids[auction.bestBidId];
 
-        require(msg.value>=auction.min && msg.value>bestOffer.price,"bid must be greater than the minimum and the best offer")
-        auction.bestOfferId = newOfferId;
-        auction.offerIds.push(newOfferId);
+        require(msg.value>=auction.min && msg.value>bestBid.price,"bid must be greater than the minimum and the best offer");
+        auction.bestBidId = newBidId;
+        auction.bidIds.push(newBidId);
 
-        bids[newOfferId] = Bid(newOfferId,_auctionId,msg.sender,msg.value);
+        bids[newBidId] = Bid(newBidId,_auctionId,msg.sender,msg.value);
+
+        bidList[msg.sender].push(newBidId);
+
+        newBidId++;
 
     }   
 
